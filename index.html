@@ -64,8 +64,15 @@
 				headers: {"Content-Type": "application/json"}
 			});
 			const json = await response.json();
+			console.log(json)
 			const label = json['data'][0]['confidences'][0]['label'];
-			results.innerHTML = `<h2> We think this photo is of a...</h2> <p class="prediction">${label}</p><img src="${dataURL}" width="128">`
+			const confidence = json['data'][0]['confidences'][0]['confidence'] * 100;
+			if (confidence < 95) {
+				results.innerHTML = `<h2>I think you're trying to trick me!</h2>`;
+			} else {
+				results.innerHTML = `<h2> We think this photo is of a...</h2> <p class="prediction">${label} with a ${confidence.toFixed(2)}% confidence</p><img src="${dataURL}" width="128">`
+			}
+
 		}
 
 		function read() {
