@@ -9,8 +9,8 @@ async function loaded(reader) {
 	ctx.drawImage(image, 0, 0);
 
 	// Resize the image to a smaller size
-	const MAX_WIDTH = 128;
-	const MAX_HEIGHT = 128;
+	const MAX_WIDTH = 256;
+	const MAX_HEIGHT = 256;
 	let width = image.width;
 	let height = image.height;
 
@@ -40,10 +40,13 @@ async function loaded(reader) {
 	});
 	const json = await response.json();
 	console.log(json)
-	const label = json['data'][0]['confidences'][0]['label'];
+	let label = json['data'][0]['confidences'][0]['label'];
+	if (label == "puppy") {
+		label = "dog"
+	}
 	const confidence = json['data'][0]['confidences'][0]['confidence'] * 100;
-	if (confidence < 95) {
-		results.innerHTML = `<h2>I think you're trying to trick me!</h2>`;
+	if (confidence < 70) {
+		results.innerHTML = `<h2>I can't figure this out. </h2>`;
 	} else {
 		results.innerHTML = `<h2> We think this photo is of a...</h2> <p class="prediction">${label} with ${confidence.toFixed(2)}% confidence</p><img src="${dataURL}" width="128">`
 	}
